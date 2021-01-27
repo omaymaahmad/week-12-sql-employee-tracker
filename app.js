@@ -49,7 +49,7 @@ function addEmpDepRol() {
                 if (value) {
                     return true;
                 } else {
-                    reutrn "Please enter a value to continue";
+                    return "Please enter a value to continue";
                 }
             },
         },
@@ -61,7 +61,7 @@ function addEmpDepRol() {
                 if (value) {
                     return true;
                 } else {
-                    reutrn "Please enter a value to continue";
+                    return "Please enter a value to continue";
                 }
         },
         },
@@ -73,7 +73,7 @@ function addEmpDepRol() {
                 if (value) {
                     return true;
                 } else {
-                    reutrn "Please enter a value to continue";
+                    return "Please enter a value to continue";
                 }
             },    
         
