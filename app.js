@@ -1,8 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const consoleTable = require("console.table");
-const databaseQuestions = require("./db/employeeDatabase");
-const { connection } = require("./db/employeeDatabase");
+const util = require("util")
+require("console.table");
 
 // creating connection to SQL database
 const connection = mysql.createConnection({
@@ -12,6 +11,8 @@ const connection = mysql.createConnection({
     password: "Jabeen98",
     database: "employee_tracker_db"
 });
+
+connection.query = util.promisify(connection.query)
 
 // connect to MYSQL server and SQL database
 connection.connect(function(err) {
@@ -37,9 +38,9 @@ function begin() {
             },
         }
     ])
-}.then(function (answers) {
+.then(function (answers) {
     console.log(answers)
-    switch (answers.action) {
+    switch (answers.choice) {
         case "Add Employee":
             addEmployee();
             break;
@@ -50,7 +51,7 @@ function begin() {
             addRole();
             break;
         case "View Employee":
-            viewEmployee();
+            viewEmployees();
             break; 
         case "View Department":
             viewDepartment();
@@ -65,9 +66,9 @@ function begin() {
             end();
             break;          
     };
-    
-});
 
+});
+}
 // add employee function
 function addEmployee() {
     connection.query("SELECT * FROM role", function (err, res) {
@@ -186,4 +187,16 @@ function addRole() {
             },
         ])
     })
+}
+
+async function viewEmployees(){
+    const employees = await getEmployeesFromDatabase();
+
+    console.table(employees); 
+    begin();
+}
+
+
+async function getEmployeesFromDatabase(){
+    return connection.query("SELECT * FROM employee")
 }
