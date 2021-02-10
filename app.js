@@ -39,12 +39,13 @@ function begin() {
         }
     ])
 .then(function (answers) {
-    console.log(answers)
+    // console.log(answers)
     switch (answers.choice) {
         case "Add Employee":
             addEmployee();
             break;
         case "Add Department":
+            console.log("Add Department")
             addDepartment();
             break;
         case "Add Role":
@@ -70,11 +71,11 @@ function begin() {
 });
 }
 // add employee function
-function addEmployee() {
-    connection.query("SELECT * FROM role", function (err, res) {
-        if (err) throw err;
+async function addEmployee() {
+    const roleOptions = await connection.query("SELECT * FROM role");
+    const managerOptions = await connection.query("SELECT * FROM employee");
 
-        inquirer.prompt([
+    const employee = await inquirer.prompt([
             {
                 name: "first_name",
                 type: "input",
@@ -99,22 +100,45 @@ function addEmployee() {
                     }
                 },
             },
-            {
-                name: "role_id",
-                type: "list",
-                message: "select the role for new Employee: ",
-                choices: [1,2,3],
-                validate: (value) => {
-                    if (value) {
-                        return true;
-                    } else {
-                        return "You must select one of the options to continue"
-                    }
-                },
-            },
+           
 
-        ]);
+    ]);
+    
+    const roleChoices = roleOptions.map(({id, title}) => ({
+        name: title,
+        value: id
+    }));
+
+    const  {roleId} = await inquirer.prompt({
+        type: "list",
+        name: "roleId",
+        message: "What role will this new employee hold?",
+        choices: roleChoices
     })
+
+    employee.role_id = roleId; 
+
+    const managerChoices = managerOptions.map(({id, first_name, last_name}) => ({
+        name: first_name + last_name,
+        value: id
+    }));
+
+    const {managerId} = await inquirer.prompt({
+        type: "list",
+        name: "managerId",
+        message: "Who will be this new emnployees manager?",
+        choices: managerChoices
+    });
+
+    employee.manager_id = managerId; 
+
+    await addEmployeeToDB(employee);
+    //viewEmployees();
+    //begin();
+}
+
+async function addEmployeeToDB(employee){
+    connection.query("INSERT INTO employee SET ?", employee)
 }
 
 // add department function
