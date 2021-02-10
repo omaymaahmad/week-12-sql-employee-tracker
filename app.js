@@ -67,3 +67,50 @@ function begin() {
     };
     
 });
+
+function addEmployee() {
+    connection.query("SELECT * FROME role", function (err, res) {
+        if (err) throw err;
+
+        inquirer.prompt([
+            {
+                name: "first_name",
+                type: "input",
+                message: "enter Employee's first name: ",
+                validate: (value) => {
+                    if (value) {
+                        return true;
+                    } else {
+                        return "You must enter the name to continue"
+                    }
+                },
+            },
+            {
+                name: "last_name",
+                type: "input",
+                message: "enter Employee's last name: ",
+                validate: (value) => {
+                    if (value) {
+                        return true;
+                    } else {
+                        return "You must enter the name to continue"
+                    }
+                },
+            },
+            {
+                name: "role_id",
+                type: "list",
+                message: "select the role for new Employee: ",
+                choices: [1,2,3],
+                validate: (value) => {
+                    if (value) {
+                        return true;
+                    } else {
+                        return "You must select one of the options to continue"
+                    }
+                },
+            },
+
+        ]);
+    })
+}
