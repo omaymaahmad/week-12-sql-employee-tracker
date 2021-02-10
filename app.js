@@ -139,3 +139,51 @@ function addDepartment() {
         })
     })
 }
+
+// add role function
+function addRole() {
+    connection.query("SELECT * FROM department", function(err, res) {
+        if (err) throw err;
+
+        inquirer.prompt([
+            {
+                name: "new_role",
+                type: "input",
+                message: "enter the title of the new role: ",
+                validate: (value) => {
+                    if (value) {
+                        return true;
+                    } else {
+                        return "You must enter the title to continue"
+                    }
+                },
+            },
+            {
+                name: "dept_salary",
+                type: "input",
+                message: "enter the salary of this position?",
+                validate: (value) => {
+                    if (value) {
+                        return true;
+                    } else {
+                        return "You must enter the amount to continue"
+                    }
+                },
+            },
+            {
+                name: "dept_id",
+                type: "list",
+                message: "what department does the role belong to? ",
+                choices: [1, 2, 3],
+                validate: (value) => {
+                    if (value) {
+                        return true;
+                    } else {
+                        return "You must select one of the options to continue"
+                    }
+                },
+
+            },
+        ])
+    })
+}
