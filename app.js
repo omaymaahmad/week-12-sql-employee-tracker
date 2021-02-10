@@ -68,8 +68,9 @@ function begin() {
     
 });
 
+// add employee function
 function addEmployee() {
-    connection.query("SELECT * FROME role", function (err, res) {
+    connection.query("SELECT * FROM role", function (err, res) {
         if (err) throw err;
 
         inquirer.prompt([
