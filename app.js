@@ -1,4 +1,15 @@
+const inquirer = require("inquirer");
 const mysql = require("mysql");
+const consoleTable = require("console.table");
+const databaseQuestions = require("./db/employeeDatabase");
+const { connection } = require("./db/employeeDatabase");
+
+function initialise() {
+    console.log("..this is loading");
+    begin();
+}
+
+
 
 const connection = mysql.createConnection({
     host: "localhost",
