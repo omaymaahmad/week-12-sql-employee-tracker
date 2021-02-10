@@ -4,13 +4,7 @@ const consoleTable = require("console.table");
 const databaseQuestions = require("./db/employeeDatabase");
 const { connection } = require("./db/employeeDatabase");
 
-function initialise() {
-    console.log("..this is loading");
-    begin();
-}
-
-
-
+// creating connection to SQL database
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -19,19 +13,21 @@ const connection = mysql.createConnection({
     database: "employee_tracker_db"
 });
 
+// connect to MYSQL server and SQL database
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadID);
     begin();
 });
 
+// question prompts
 function begin() {
     inquirer.prompt([
         {
             type: "list",
             name: "choice",
             message: "Please select one of the options to continue",
-            choices: ["Add Employee, Department or Role", "View Employee, Department or Role", "Update Employee Roles"],
+            choices: ["Add Employee", "Add Department", "Add Role", "View Employee", "View Department", "View Role", "Update Employee Roles", "Exit"],
             validate: (value) => {
                 if (value) {
                     return true;
@@ -42,60 +38,32 @@ function begin() {
         }
     ])
 }.then(function (answers) {
-    console.log("----" + answers.choice.toUpperCase + "----")
-    if (answers.choice === 'Add') {
-        addEmpDepRol()
-    } else {
-        viewEmpDepRol
-    }
-})
-
-function addEmpDepRol() {
-    inquirer.prompt([
-        {
-            type: "input",
-            name: "employeeName",
-            message: "What is the full name of the Employee?",
-            validate: (value) => {
-                if (value) {
-                    return true;
-                } else {
-                    return "Please enter a value to continue";
-                }
-            },
-        },
-        {
-            type: "input", 
-            name: "departmentName",
-            message: "What is the name of the department?",
-            validate: (value) => {
-                if (value) {
-                    return true;
-                } else {
-                    return "Please enter a value to continue";
-                }
-        },
-        },
-        {
-            type: "input", 
-            name: "roleName",
-            message: "What is the role?",
-            validate: (value) => {
-                if (value) {
-                    return true;
-                } else {
-                    return "Please enter a value to continue";
-                }
-            },    
-        
-        }
-    ]).then(function (response) {
-        var value = []
-
-        values.push(response.employeeName)
-        values.push(response.departmentName)
-        values.push(response.roleName)
-
-        postDB(values)
-    })
-}
+    console.log(answers)
+    switch (answers.action) {
+        case "Add Employee":
+            addEmployee();
+            break;
+        case "Add Department":
+            addDepartment();
+            break;
+        case "Add Role":
+            addRole();
+            break;
+        case "View Employee":
+            viewEmployee();
+            break; 
+        case "View Department":
+            viewDepartment();
+            break;   
+        case "View Role":
+            viewRole();
+            break;
+        case "Update Employee Roles":
+            updateEmployeeRoles();
+            break;  
+        case "Exit":
+            end();
+            break;          
+    };
+    
+});
