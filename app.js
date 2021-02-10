@@ -191,12 +191,10 @@ function addRole() {
 
 async function viewEmployees(){
     const employees = await getEmployeesFromDatabase();
-
     console.table(employees); 
     begin();
 }
-
-
 async function getEmployeesFromDatabase(){
     return connection.query("SELECT * FROM employee")
 }
+
