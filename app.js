@@ -189,6 +189,7 @@ function addRole() {
     })
 }
 
+// view employee function
 async function viewEmployees(){
     const employees = await getEmployeesFromDatabase();
     console.table(employees); 
@@ -198,3 +199,22 @@ async function getEmployeesFromDatabase(){
     return connection.query("SELECT * FROM employee")
 }
 
+// view department function
+async function viewDepartment(){
+    const department = await getDepartmentFromDatabase();
+    console.table(department); 
+    begin();
+}
+async function getDepartmentFromDatabase(){
+    return connection.query("SELECT * FROM department")
+}
+
+// view role function 
+async function viewRole(){
+    const role = await getRoleFromDatabase();
+    console.table(role); 
+    begin();
+}
+async function getRoleFromDatabase(){
+    return connection.query("SELECT * FROM role")
+}
