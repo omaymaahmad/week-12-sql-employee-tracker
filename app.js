@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const util = require("util")
+const util = require("util");
 require("console.table");
 
 // creating connection to SQL database
@@ -134,7 +134,7 @@ async function addEmployee() {
 
     await addEmployeeToDB(employee);
     //viewEmployees();
-    //begin();
+    begin();
 }
 
 async function addEmployeeToDB(employee){
@@ -166,13 +166,10 @@ function addDepartment() {
 }
 
 // add role function
-function addRole() {
-    connection.query("SELECT * FROM department", function(err, res) {
-        if (err) throw err;
-
-        inquirer.prompt([
+async function addRole() {
+    const newRole = await inquirer.prompt([
             {
-                name: "new_role",
+                name: "title",
                 type: "input",
                 message: "enter the title of the new role: ",
                 validate: (value) => {
@@ -184,7 +181,7 @@ function addRole() {
                 },
             },
             {
-                name: "dept_salary",
+                name: "salary",
                 type: "input",
                 message: "enter the salary of this position?",
                 validate: (value) => {
@@ -196,7 +193,7 @@ function addRole() {
                 },
             },
             {
-                name: "dept_id",
+                name: "department_id",
                 type: "list",
                 message: "what department does the role belong to? ",
                 choices: [1, 2, 3],
@@ -209,8 +206,14 @@ function addRole() {
                 },
 
             },
-        ])
-    })
+        ]);
+    await addRoleToDB(newRole);
+    begin();    
+    
+}
+
+async function addRoleToDB(newRole){
+    connection.query("INSERT INTO role SET ?", newRole)
 }
 
 // view employee function
