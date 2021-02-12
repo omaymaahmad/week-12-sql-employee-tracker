@@ -245,3 +245,45 @@ async function viewRole(){
 async function getRoleFromDatabase(){
     return connection.query("SELECT * FROM role")
 }
+
+// update employee role 
+async function updateEmployeeRoles() {
+    const employees = await connection.query("SELECT * FROM employee");
+    const roles = await connection.query("SELECT * FROM role");
+
+    const employeeOptions = employees.map(({id, first_name, last_name}) => ({
+        name: first_name + last_name,
+        value: id
+    }))
+
+    const {employeeId} = await inquirer.prompt([
+        {
+            type: "list",
+            name: "employeeId",
+            message: "which employee would you like to update?",
+            choices: employeeOptions
+        }
+    ])
+
+    const roleOptions = roles.map(({id, title}) => ({
+        name: title,
+        value: id
+    }))
+
+    const {roleId} = await inquirer.prompt([
+        {
+            type: "list",
+            name: "roleId",
+            message: "what is the new role for the employee?",
+            choices: roleOptions
+        }
+    ])
+
+    await updateEmployeeRolesDb(employeeId, roleId);
+    begin();
+
+}
+
+async function updateEmployeeRolesDb (employee, role) {
+    return connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [role, employee])
+} 
