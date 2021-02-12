@@ -288,6 +288,7 @@ async function updateEmployeeRolesDb (employee, role) {
     return connection.query("UPDATE employee SET role_id = ? WHERE id = ?", [role, employee])
 } 
 
+// end function
 function end(){
     process.exit();
 }
